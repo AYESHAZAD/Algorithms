@@ -1,0 +1,80 @@
+#include <bits/stdc++.h>
+using namespace std;
+struct node
+{
+    int u, v, w;
+    node(int a, int b, int c)
+    {
+        u = a;
+        v = b;
+        w = c;
+    }
+    bool operator < (const node& p) const///node type obj p which can point u,v,w of second
+    {
+        return w < p.w;
+    }
+};
+vector <node> edge;///edge will hold the values of node structure
+int par[10005];
+int find (int u)
+{
+    if(u != par[u])
+        par[u] = find(par[u]);
+
+    return par[u];
+}
+int krush_kal (int n)
+{
+    sort(edge.begin(), edge.end());
+    for(int i = 1; i <= n; i++)
+    {
+        par[i] = i;
+    }
+    int cnt = 0;
+    int cost = 0;
+    for(int i = 0; i < (int)edge.size(); i++)
+    {
+        int u , v;
+        u = find(edge[i].u);
+        v = find(edge[i].v);
+
+        if(u != v)
+        {
+            cnt++;
+            par[u]=v;
+            cost += edge[i].w;
+            if(cnt == n - 1)
+                break;
+        }
+    }
+    return cost;
+}
+int main()
+{
+     int n, m;
+    printf("Enter the node & edge:\n");
+     while(cin >> n >> m)
+     {
+         for(int i = 0; i < m; i++)
+         {
+             int u, v, w;
+             cin >> u >> v >> w;
+             edge.push_back(node(u, v, w));
+         }
+
+         printf("The weight of the spanning tree: ");
+        cout<< krush_kal(n) << endl;
+        edge.clear();
+     }
+
+}
+/*
+4 5
+1 2 2
+1 3 2
+2 3 1
+2 4 5
+4 3 3
+
+*/
+
